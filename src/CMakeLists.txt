@@ -1,8 +1,12 @@
 set(HEADERS
+	func.hpp
+	NMCS.hpp
 )
 
 set(SOURCES
-    main.cpp
+	func.cpp
+	NMCS.cpp
+	main.cpp
 )
 
 add_executable(squaregen ${SOURCES})
