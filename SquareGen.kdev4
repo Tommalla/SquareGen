@@ -1,0 +1,4 @@
+[Project]
+Name=SquareGen
+Manager=KDevCMakeManager
+VersionControl=kdevgit
