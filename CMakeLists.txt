@@ -1,5 +1,7 @@
-project(squaregen)
+cmake_minimum_required(VERSION 2.8.9)
 
-add_executable(squaregen main.cpp)
+project(SquareGen)
 
-install(TARGETS squaregen RUNTIME DESTINATION bin)
+set (EXECUTABLE_OUTPUT_PATH "${SquareGen_BINARY_DIR}/bin")
+
+add_subdirectory(src)
