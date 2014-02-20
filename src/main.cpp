@@ -4,7 +4,6 @@
 
 #include "NMCS.hpp"
 
-using namespace NMCS;
 using std::make_pair;
 
 int buffer[1000];
@@ -20,10 +19,11 @@ int main(int argc, char** argv) {
 	unsigned int seed = time(NULL);
 	srand(seed);
 	printf("Starting string creation for n = %d, level = %d and seed = %u\n", n, level, seed);
-	Playout bestRes = make_pair("", -1);
+	NMCS::Playout bestRes = make_pair("", -1);
+	NMCS gen(n, level);
 
 	while(true) {
-		Playout res = generate(n, level, buffer);
+		NMCS::Playout res = gen();
 		if (res.second > bestRes.second) {
 			printf("\nNew best result: %d\nString: %s\n", res.second, res.first.c_str());
 			bestRes = res;
