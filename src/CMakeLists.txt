@@ -10,3 +10,4 @@ set(SOURCES
 )
 
 add_executable(squaregen ${SOURCES})
+add_executable(countTest countTest.cpp func.hpp func.cpp)
