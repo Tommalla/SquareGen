@@ -7,14 +7,11 @@ using std::string;
 using std::fill;
 using std::unordered_set;
 
-int countSquares(const string& str) {
-	int* pref = new int[str.length()];
+int countSquares(const string& str, int* pref) {
 	int res = 0;
 	int length = str.length();
 	unordered_set<string> s;
 	string tmp;
-
-	fill(pref, pref + length, 0);
 
 	for (int i = 0; i < length; ++i) {
 		tmp.clear();
@@ -37,6 +34,5 @@ int countSquares(const string& str) {
 		}
 	}
 
-	delete[] pref;
 	return res;
 }

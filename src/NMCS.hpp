@@ -18,14 +18,14 @@ namespace NMCS {
 	/**
 	 * @brief This function generates the best string of length n.
 	 */
-	Playout generate(const size_t n, const int level);
+	Playout generate(const size_t n, const int level, int* countBuffer);
 
 
 	/**
 	 * @brief Performs a Nested Monte Carlo Search with parameter level; starting from state s, knowing that there
 	 * are n moves to be made before the end of game.
 	 */
-	Playout nestedSearch(NMCS::State s, const size_t n, int level);
+	Playout nestedSearch(NMCS::State s, const size_t n, int level, int* countBuffer);
 
 	/**
 	 * @brief Returns the state after playing a move.
@@ -38,7 +38,7 @@ namespace NMCS {
 	/**
 	 * @brief Performs a random playout starting from state s.
 	 */
-	Playout samplePlayout(NMCS::State s, const size_t n);
+	Playout samplePlayout(NMCS::State s, const size_t n, int* countBuffer);
 };
 
 #endif // NMCS_H

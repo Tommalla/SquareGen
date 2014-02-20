@@ -5,6 +5,9 @@
 #include "NMCS.hpp"
 
 using namespace NMCS;
+using std::make_pair;
+
+int buffer[1000];
 
 int main(int argc, char** argv) {
 	if (argc != 3) {
@@ -17,10 +20,14 @@ int main(int argc, char** argv) {
 	unsigned int seed = time(NULL);
 	srand(seed);
 	printf("Starting string creation for n = %d, level = %d and seed = %u\n", n, level, seed);
+	Playout bestRes = make_pair("", -1);
 
 	while(true) {
-		Playout res = generate(n, level);
-		printf("\nResult: %d\nString: %s\n", res.second, res.first.c_str());
+		Playout res = generate(n, level, buffer);
+		if (res.second > bestRes.second) {
+			printf("\nNew best result: %d\nString: %s\n", res.second, res.first.c_str());
+			bestRes = res;
+		}
 	}
 	return 0;
 }

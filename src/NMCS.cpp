@@ -4,11 +4,11 @@
 using namespace NMCS;
 using std::make_pair;
 
-Playout NMCS::generate(const size_t n, const int level) {
-	return nestedSearch("", n, level);
+Playout NMCS::generate(const size_t n, const int level, int* countBuffer) {
+	return nestedSearch("", n, level, countBuffer);
 }
 
-Playout NMCS::nestedSearch(State s, const size_t n, int level) {
+Playout NMCS::nestedSearch(State s, const size_t n, int level, int* countBuffer) {
 	Playout res = make_pair(s, -1);
 
 	while (s.length() < n) {
@@ -17,8 +17,8 @@ Playout NMCS::nestedSearch(State s, const size_t n, int level) {
 
 		//find the best move
 		for (Move m: MOVES) {
-			Playout tmp = (level == 1) ? samplePlayout(play(s, m), n) :
-					nestedSearch(play(s, m), n, level - 1);
+			Playout tmp = (level == 1) ? samplePlayout(play(s, m), n, countBuffer) :
+					nestedSearch(play(s, m), n, level - 1, countBuffer);
 
 			if (bestScore < tmp.second) {
 				best = m;
@@ -41,10 +41,10 @@ State NMCS::play(const State& s, const Move move) {
 	return res;
 }
 
-Playout NMCS::samplePlayout(State s, const size_t n) {
+Playout NMCS::samplePlayout(State s, const size_t n, int* countBuffer) {
 	while (s.length() < n)
 		s = play(s, MOVES[random() % MOVES.size()]);
-	return make_pair(s, countSquares(s));
+	return make_pair(s, countSquares(s, countBuffer));
 }
 
 
