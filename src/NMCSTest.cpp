@@ -9,8 +9,8 @@ int main() {
 	int buffer[100];
 
 	for (int i = 1; i < 50; ++i) {
-		NMCS gen(i, (rand() % i) % 2 + 1);
-		auto p = gen.generate();
+		NMCS gen(i);
+		auto p = gen((rand() % i) % 2 + 1);
 		assert(p.second == countSquares(p.first, buffer));
 	}
 

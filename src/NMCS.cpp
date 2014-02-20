@@ -3,25 +3,29 @@
 
 using std::make_pair;
 
-NMCS::NMCS(const size_t n, const int level)
+NMCS::NMCS(const size_t n)
 : n{n}
-, startingLevel{level}
-, countBuffer{new int[n]} {}
+, countBuffer{new int[n]}
+, bestPlayout("", -1) {}
 
 NMCS::~NMCS() {
 	delete[] countBuffer;
 }
 
-NMCS::Playout NMCS::generate() {
-	return nestedSearch("", startingLevel);
+NMCS::Playout NMCS::generate(const int level) {
+// 	bestPlayout = make_pair("", -1);
+	Playout res = nestedSearch("", bestPlayout, level);
+	if (res.second > bestPlayout.second)
+		bestPlayout = res;
+	return res;
 }
 
-NMCS::Playout NMCS::operator()() {
-	return generate();
+NMCS::Playout NMCS::operator()(const int level) {
+	return generate(level);
 }
 
-NMCS::Playout NMCS::nestedSearch(State s, int level) {
-	Playout res = make_pair(s, -1);
+NMCS::Playout NMCS::nestedSearch(NMCS::State s, const Playout& bestAvailable, int level) {
+	Playout res = bestAvailable;
 
 	while (s.length() < n) {
 		Move best = MOVES[0];
@@ -29,8 +33,8 @@ NMCS::Playout NMCS::nestedSearch(State s, int level) {
 
 		//find the best move
 		for (Move m: MOVES) {
-			Playout tmp = (level == 1) ? samplePlayout(play(s, m)) :
-					nestedSearch(play(s, m), level - 1);
+			Playout tmp = (level == 0) ? samplePlayout(play(s, m)) :
+					nestedSearch(play(s, m), res, level - 1);
 
 			if (bestScore < tmp.second) {
 				best = m;
@@ -40,6 +44,9 @@ NMCS::Playout NMCS::nestedSearch(State s, int level) {
 			if (res.second < tmp.second)
 				res = tmp;
 		}
+
+		if (bestScore < bestAvailable.second)
+			best = bestAvailable.first[s.length()];
 
 		s = play(s, best);
 	}

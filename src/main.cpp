@@ -6,28 +6,29 @@
 
 using std::make_pair;
 
-int buffer[1000];
-
 int main(int argc, char** argv) {
-	if (argc != 3) {
-		puts("Wrong number of arguments!\nThe correct usage is SquareGen <word length> <level>");
+	if (argc != 2) {
+		puts("Wrong number of arguments!\nThe correct usage is SquareGen <word length>");
 		return 1;
 	}
 
 	const int n = atoi(argv[1]);
-	const int level = atoi(argv[2]);
 	unsigned int seed = time(NULL);
 	srand(seed);
-	printf("Starting string creation for n = %d, level = %d and seed = %u\n", n, level, seed);
-	NMCS::Playout bestRes = make_pair("", -1);
-	NMCS gen(n, level);
+	printf("Starting string creation for n = %d and seed = %u\n", n, seed);
+	NMCS::Playout bestRes, res;
+	res = bestRes = make_pair("", -1);
+	NMCS gen(n);
+	res = gen(2);
 
-	while(true) {
-		NMCS::Playout res = gen();
+	do {
 		if (res.second > bestRes.second) {
 			printf("\nNew best result: %d\nString: %s\n", res.second, res.first.c_str());
 			bestRes = res;
-		}
-	}
+		}/* else
+			printf("Score = %d\n", res.second);*/
+
+		res = gen(1);
+	} while (true);
 	return 0;
 }

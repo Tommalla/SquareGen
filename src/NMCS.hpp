@@ -19,27 +19,27 @@ public:
 	typedef std::pair<State, int> Playout;
 	typedef char Move;
 
-	NMCS(const size_t n, const int level);
+	NMCS(const size_t n);
 	~NMCS();
 
 	/**
 	 * @brief This function generates the best string of length n.
 	 */
-	Playout generate();
+	Playout generate(const int level);
 
-	Playout operator()();
+	Playout operator()(const int level);
 
 private:
 	const std::vector<char> MOVES = {'0', '1'};
 	const size_t n;
-	const int startingLevel;
 	int* countBuffer;
+	Playout bestPlayout;
 
 	/**
 	 * @brief Performs a Nested Monte Carlo Search with parameter level; starting from state s, knowing that there
 	 * are n moves to be made before the end of game.
 	 */
-	Playout nestedSearch(NMCS::State s, int level);
+	Playout nestedSearch(NMCS::State s, const NMCS::Playout& bestAvailable, int level);
 
 	/**
 	 * @brief Returns the state after playing a move.
