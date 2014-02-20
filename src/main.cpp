@@ -1,19 +1,26 @@
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
+
+#include "NMCS.hpp"
+
+using namespace NMCS;
 
 int main(int argc, char** argv) {
-	if (argc != 2) {
-		puts("Wrong number of arguments!\nThe correct usage is SquareGen <word length>");
+	if (argc != 3) {
+		puts("Wrong number of arguments!\nThe correct usage is SquareGen <word length> <level>");
 		return 1;
 	}
 
 	const int n = atoi(argv[1]);
-	printf("Starting string creation for n = %d\n", n);
+	const int level = atoi(argv[2]);
+	unsigned int seed = time(NULL);
+	srand(seed);
+	printf("Starting string creation for n = %d, level = %d and seed = %u\n", n, level, seed);
 
 	while(true) {
-		//TODO
-		//use NMCS to create the best string,
-		//return it and print it
+		Playout res = generate(n, level);
+		printf("\nResult: %d\nString: %s\n", res.second, res.first.c_str());
 	}
 	return 0;
 }
