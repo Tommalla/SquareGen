@@ -11,3 +11,4 @@ set(SOURCES
 
 add_executable(squaregen ${SOURCES})
 add_executable(countTest countTest.cpp func.hpp func.cpp)
+add_executable(NMCSTest NMCSTest.cpp func.hpp func.cpp NMCS.hpp NMCS.cpp)
