@@ -2,6 +2,7 @@
 #include "func.hpp"
 
 using std::make_pair;
+using namespace func;
 
 NMCS::NMCS(const size_t n)
 : n{n}
@@ -12,7 +13,7 @@ NMCS::~NMCS() {
 	delete[] countBuffer;
 }
 
-NMCS::Playout NMCS::generate(const int level) {
+Playout NMCS::generate(const int level) {
 // 	bestPlayout = make_pair("", -1);
 	Playout res = nestedSearch("", bestPlayout, level);
 	if (res.second > bestPlayout.second)
@@ -20,12 +21,12 @@ NMCS::Playout NMCS::generate(const int level) {
 	return res;
 }
 
-NMCS::Playout NMCS::operator()(const int level) {
+Playout NMCS::operator()(const int level) {
 	return generate(level);
 }
 
-NMCS::Playout NMCS::nestedSearch(NMCS::State s, const Playout& bestAvailable, int level) {
-	Playout res = bestAvailable;
+Playout NMCS::nestedSearch(State s, const Playout& bestAvailable, int level) {
+	Playout res = (bestAvailable.first.length() < n) ? make_pair(s, -1) : bestAvailable;
 
 	while (s.length() < n) {
 		Move best = MOVES[0];
@@ -51,16 +52,13 @@ NMCS::Playout NMCS::nestedSearch(NMCS::State s, const Playout& bestAvailable, in
 		s = play(s, best);
 	}
 
+	if (res.second == bestAvailable.second && res.first != bestAvailable.first)
+		res.second = countSquares(res.first, countBuffer);
+
 	return res;
 }
 
-NMCS::State NMCS::play(const State& s, const Move move) {
-	State res = s;
-	res.push_back(move);
-	return res;
-}
-
-NMCS::Playout NMCS::samplePlayout(NMCS::State s) {
+Playout NMCS::samplePlayout(State s) {
 	while (s.length() < n)
 		s = play(s, MOVES[random() % MOVES.size()]);
 	return make_pair(s, countSquares(s, countBuffer));

@@ -1,5 +1,6 @@
 set(HEADERS
 	func.hpp
+	types.hpp
 	NMCS.hpp
 )
 

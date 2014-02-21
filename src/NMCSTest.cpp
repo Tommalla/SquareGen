@@ -3,6 +3,7 @@
 #include "NMCS.hpp"
 #include "func.hpp"
 
+using namespace func;
 
 int main() {
 	//NO srand on purpose

@@ -7,7 +7,7 @@ using std::string;
 using std::fill;
 using std::unordered_set;
 
-int countSquares(const string& str, int* pref) {
+int func::countSquares(const string& str, int* pref) {
 	int res = 0;
 	int length = str.length();
 	unordered_set<string> s;
@@ -36,3 +36,10 @@ int countSquares(const string& str, int* pref) {
 
 	return res;
 }
+
+State func::play(const State& s, const Move move) {
+	State res = s;
+	res.push_back(move);
+	return res;
+}
+

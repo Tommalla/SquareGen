@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 	unsigned int seed = time(NULL);
 	srand(seed);
 	printf("Starting string creation for n = %d and seed = %u\n", n, seed);
-	NMCS::Playout bestRes, res;
+	Playout bestRes, res;
 	res = bestRes = make_pair("", -1);
 	NMCS gen(n);
 	res = gen(2);
@@ -25,8 +25,10 @@ int main(int argc, char** argv) {
 		if (res.second > bestRes.second) {
 			printf("\nNew best result: %d\nString: %s\n", res.second, res.first.c_str());
 			bestRes = res;
-		}/* else
-			printf("Score = %d\n", res.second);*/
+		} else {
+			printf(".");
+			fflush(stdout);
+		}
 
 		res = gen(1);
 	} while (true);

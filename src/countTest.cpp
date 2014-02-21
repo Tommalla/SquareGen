@@ -3,6 +3,7 @@
 #include "func.hpp"
 
 using namespace std;
+using namespace func;
 
 int main() {
 	int pref[30];
