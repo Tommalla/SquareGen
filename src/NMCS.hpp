@@ -1,5 +1,5 @@
-#ifndef NMCS_H
-#define NMCS_H
+#ifndef NMCS_HPP
+#define NMCS_HPP
 #include <string>
 #include <utility>
 #include <vector>
@@ -42,4 +42,4 @@ private:
 	Playout samplePlayout(State s);
 };
 
-#endif // NMCS_H
+#endif // NMCS_HPP
