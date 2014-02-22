@@ -7,7 +7,7 @@ using namespace func;
 
 int main() {
 	//NO srand on purpose
-	int buffer[100];
+	unsigned int buffer[100];
 
 	for (int i = 1; i < 50; ++i) {
 		NMCS gen(i);

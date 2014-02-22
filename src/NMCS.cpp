@@ -6,7 +6,7 @@ using namespace func;
 
 NMCS::NMCS(const size_t n)
 : n{n}
-, countBuffer{new int[n]}
+, countBuffer{new unsigned int[n]}
 , bestPlayout("", -1) {}
 
 NMCS::~NMCS() {

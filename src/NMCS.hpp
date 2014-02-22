@@ -26,7 +26,7 @@ public:
 private:
 	const std::vector<char> MOVES = {'0', '1'};
 	const size_t n;
-	int* countBuffer;
+	unsigned int* countBuffer;
 	Playout bestPlayout;
 
 	/**

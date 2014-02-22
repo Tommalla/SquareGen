@@ -5,7 +5,10 @@
 #include "types.hpp"
 
 namespace func {
-	int countSquares(const std::string& str, int* pref);
+	const unsigned int X = 41;	//hash const
+
+	int countSquares(const std::string& str, unsigned int* hashTab = nullptr);
+	unsigned int powX(const int n);
 
 	/**
 	 * @brief Returns the state after playing a move.
