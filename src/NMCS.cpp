@@ -16,6 +16,12 @@ NMCS::~NMCS() {
 Playout NMCS::generate(const int level) {
 // 	bestPlayout = make_pair("", -1);
 	Playout res = nestedSearch("", bestPlayout, level);
+	int realScore = deterministicCountSquares(res.first);
+	if (realScore != res.second) {
+		puts("countError!");
+		res.second = realScore;
+	}
+
 	if (res.second > bestPlayout.second)
 		bestPlayout = res;
 	return res;

@@ -39,6 +39,29 @@ int func::countSquares(const string& str, unsigned int* hashTab) {
 	return res;
 }
 
+int func::deterministicCountSquares(const string& str) {
+	unordered_set<string> s;
+	string tmp;
+	int length = str.length();
+	int res = 0;
+
+	for (int i = 0; i < length; ++i) {
+		tmp.clear();
+		for (int j = i + 1; j < length; j += 2) {
+			int half = (j - i) / 2 + i;
+			tmp.push_back(str[half]);
+
+			if (isEqual(tmp, str, half + 1, j) && s.count(tmp) == 0) {
+				s.insert(tmp);
+				++res;
+			}
+		}
+	}
+
+	return res;
+}
+
+
 unsigned int func::powX(const int n) {
 	static unsigned int powers[1000];
 	static int id = -1;
@@ -52,6 +75,13 @@ unsigned int func::powX(const int n) {
 	}
 
 	return powers[n];
+}
+
+bool func::isEqual(const string& a, const string& bWhole, const int& begin, const int& end) {
+	for (int i = begin; i <= end; ++i)
+		if (a[i - begin] != bWhole[i])
+			return false;
+	return true;
 }
 
 
