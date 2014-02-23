@@ -1,5 +1,5 @@
-#ifndef NMCS_H
-#define NMCS_H
+#ifndef NRPA_HPP
+#define NRPA_HPP
 #include <string>
 #include <set>
 #include <vector>
@@ -25,6 +25,12 @@ public:
 
 	const float ALPHA = 1.0f;
 
+protected:
+	/**
+	 * @brief Performs a Nested Rollout Policy Adaptation with parameter level;
+	 */
+	virtual Playout nestedSearch(const int level, std::unordered_map<std::string, float> pol, const int numberOfPlayouts);
+
 private:
 	const std::vector<Move> MOVES = {'0', '1'};
 	const size_t n;
@@ -32,11 +38,6 @@ private:
  	std::unordered_map<std::string, float> bestPolicy;	//std::string so that it compiles
 							//without having to implement hash for Playout 'type'
 	int bestScore;
-
-	/**
-	 * @brief Performs a Nested Rollout Policy Adaptation with parameter level;
-	 */
-	Playout nestedSearch(const int level, std::unordered_map<std::string, float> pol, const int numberOfPlayouts);
 
 	/**
 	 * @brief Performs a random playout starting from the root.
@@ -48,4 +49,4 @@ private:
 	void adapt(const State& s, std::unordered_map<std::string, float>& pol);
 };
 
-#endif // NMCS_H
+#endif // NRPA_HPP
