@@ -23,9 +23,10 @@ public:
 
 	Playout operator()(const int level, const int numberOfPlayouts);
 
+	const float ALPHA = 1.0f;
+
 private:
 	const std::vector<Move> MOVES = {'0', '1'};
-	const float ALPHA = 1.0;
 	const size_t n;
 	unsigned int* countBuffer;
 	std::unordered_map<std::string, float> pol;	//std::string so that it compiles

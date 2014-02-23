@@ -31,7 +31,16 @@ set(NMCS_PROGRAM
 	genNMCS.cpp
 )
 
+set(NRPA_PROGRAM
+	${COMMON_HEADERS}
+	${COMMON_SOURCES}
+	${NRPA_HEADERS}
+	${NRPA_SOURCES}
+	genNRPA.cpp
+)
+
 add_executable(genNMCS ${NMCS_PROGRAM})
+add_executable(genNRPA ${NRPA_PROGRAM})
 add_executable(countTest countTest.cpp ${COMMON_HEADERS} ${COMMON_SOURCES})
 add_executable(NMCSTest NMCSTest.cpp ${COMON_HEADERS} ${COMMON_SOURCES} ${NMCS_HEADERS} ${NMCS_SOURCES})
 add_executable(NRPATest NRPATest.cpp ${COMMON_HEADERS} ${COMMON_SOURCES} ${NRPA_HEADERS} ${NRPA_SOURCES})

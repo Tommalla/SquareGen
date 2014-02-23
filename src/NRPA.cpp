@@ -17,6 +17,7 @@ NRPA::~NRPA() {
 }
 
 Playout NRPA::generate(const int level, const int numberOfPlayouts) {
+	pol.clear();
 	Playout res = nestedSearch(level, numberOfPlayouts);
 	int realScore = deterministicCountSquares(res.first);
 	if (realScore != res.second) {

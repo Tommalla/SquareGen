@@ -2,35 +2,35 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "NMCS.hpp"
+#include "NRPA.hpp"
 
 using std::make_pair;
 
 int main(int argc, char** argv) {
-	if (argc != 2) {
-		puts("Wrong number of arguments!\nThe correct usage is SquareGen <word length>");
+	if (argc != 3) {
+		puts("Wrong number of arguments!\nThe correct usage is genNRPA <word length> <numberOfPlayouts>");
 		return 1;
 	}
 
 	const int n = atoi(argv[1]);
+	const int no = atoi(argv[2]);
 	unsigned int seed = time(NULL);
 	srand(seed);
-	printf("Starting string creation for n = %d and seed = %u\n", n, seed);
+	NRPA gen(n);
+	printf("Starting string creation with NRPA for n = %d, ALPHA = %.3f and seed = %u\n", n, gen.ALPHA, seed);
 	Playout bestRes, res;
 	res = bestRes = make_pair("", -1);
-	NMCS gen(n);
-	res = gen(3);
 
 	do {
+		res = gen(3, no);
 		if (res.second > bestRes.second) {
 			printf("\nNew best result: %d\nString: %s\n", res.second, res.first.c_str());
 			bestRes = res;
 		} else {
-			printf(".");
+			printf("score: %d\n", res.second);
 			fflush(stdout);
 		}
 
-		res = gen(1);
 	} while (true);
 	return 0;
 }
