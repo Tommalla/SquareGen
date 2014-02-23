@@ -6,19 +6,23 @@
 using std::make_pair;
 using std::unordered_map;
 using std::vector;
+using std::string;
 using namespace func;
 
 NRPA::NRPA(const size_t n)
 : n{n}
-, countBuffer{new unsigned int[n]} {}
+, countBuffer{new unsigned int[n]}
+, bestScore{-1} {}
 
 NRPA::~NRPA() {
 	delete[] countBuffer;
 }
 
 Playout NRPA::generate(const int level, const int numberOfPlayouts) {
-	pol.clear();
-	Playout res = nestedSearch(level, numberOfPlayouts);
+	unordered_map<string, float> startingPolicy;
+	startingPolicy = bestPolicy;
+
+	Playout res = nestedSearch(level, startingPolicy, numberOfPlayouts);
 	int realScore = deterministicCountSquares(res.first);
 	if (realScore != res.second) {
 		puts("Error in countSquares!");
@@ -31,22 +35,27 @@ Playout NRPA::operator()(const int level, const int numberOfPlayouts) {
 	return generate(level, numberOfPlayouts);
 }
 
-Playout NRPA::nestedSearch(const int level, const int numberOfPlayouts) {
+Playout NRPA::nestedSearch(const int level, unordered_map<string, float> pol, const int numberOfPlayouts) {
 	if (level == 0)
-		return samplePlayout();
+		return samplePlayout(pol);
 
 	Playout res = getRoot();
 	for (int p = 0; p < numberOfPlayouts; ++p) {
-		Playout tmp = nestedSearch(level - 1, numberOfPlayouts);
+		Playout tmp = nestedSearch(level - 1, pol, numberOfPlayouts);
 		if (tmp.second > res.second)
 			res = tmp;
-		adapt(res.first);
+		adapt(res.first, pol);
+	}
+
+	if (res.second > bestScore) {
+		bestScore = res.second;
+		bestPolicy = pol;
 	}
 
 	return res;
 }
 
-Playout NRPA::samplePlayout() {
+Playout NRPA::samplePlayout(unordered_map<string, float>& pol) {
 	State s = "";	//start from the root
 
 	while (s.length() < n) {
@@ -78,7 +87,7 @@ Playout NRPA::getRoot() const {
 	return make_pair("", -1);
 }
 
-void NRPA::adapt(const State& s) {
+void NRPA::adapt(const State& s, unordered_map<string, float>& pol) {
 	unordered_map<std::string, float> changed;
 	State cur = "";
 	vector<float> exps;

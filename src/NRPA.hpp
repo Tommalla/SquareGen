@@ -29,22 +29,23 @@ private:
 	const std::vector<Move> MOVES = {'0', '1'};
 	const size_t n;
 	unsigned int* countBuffer;
-	std::unordered_map<std::string, float> pol;	//std::string so that it compiles
+ 	std::unordered_map<std::string, float> bestPolicy;	//std::string so that it compiles
 							//without having to implement hash for Playout 'type'
+	int bestScore;
 
 	/**
 	 * @brief Performs a Nested Rollout Policy Adaptation with parameter level;
 	 */
-	Playout nestedSearch(const int level, const int numberOfPlayouts);
+	Playout nestedSearch(const int level, std::unordered_map<std::string, float> pol, const int numberOfPlayouts);
 
 	/**
 	 * @brief Performs a random playout starting from the root.
 	 */
-	Playout samplePlayout();
+	Playout samplePlayout(std::unordered_map< std::string, float >& pol);
 
 	Playout getRoot() const;
 
-	void adapt(const State& s);
+	void adapt(const State& s, std::unordered_map<std::string, float>& pol);
 };
 
 #endif // NMCS_H
