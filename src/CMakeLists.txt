@@ -23,6 +23,14 @@ set(NRPA_SOURCES
 	NRPA.cpp
 )
 
+set(BEAM_NRPA_HEADERS
+	BeamNRPA.hpp
+)
+
+set(BEAM_NRPA_SOURCES
+	BeamNRPA.cpp
+)
+
 set(NMCS_PROGRAM
 	${COMMON_HEADERS}
 	${COMMON_SOURCES}
@@ -39,9 +47,21 @@ set(NRPA_PROGRAM
 	genNRPA.cpp
 )
 
+set(BEAM_NRPA_PROGRAM
+	${COMMON_HEADERS}
+	${COMMON_SOURCES}
+	${NRPA_HEADERS}
+	${NRPA_SOURCES}
+	${BEAM_NRPA_HEADERS}
+	${BEAM_NRPA_SOURCES}
+	genBeamNRPA.cpp
+)
+
 add_executable(genNMCS ${NMCS_PROGRAM})
 add_executable(genNRPA ${NRPA_PROGRAM})
+add_executable(genBeamNRPA ${BEAM_NRPA_PROGRAM})
 add_executable(countTest countTest.cpp ${COMMON_HEADERS} ${COMMON_SOURCES})
 add_executable(NMCSTest NMCSTest.cpp ${COMON_HEADERS} ${COMMON_SOURCES} ${NMCS_HEADERS} ${NMCS_SOURCES})
 add_executable(NRPATest NRPATest.cpp ${COMMON_HEADERS} ${COMMON_SOURCES} ${NRPA_HEADERS} ${NRPA_SOURCES})
 add_executable(countSquares countSquares.cpp ${COMMON_HEADERS} ${COMMON_SOURCES})
+add_executable(BeamNRPATest BeamNRPATest.cpp ${BEAM_NRPA_HEADERS} ${BEAM_NRPA_SOURCES} ${COMMON_HEADERS} ${COMMON_SOURCES} ${NRPA_HEADERS} ${NRPA_SOURCES})
