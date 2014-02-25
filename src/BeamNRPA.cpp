@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cassert>
 
 #include "BeamNRPA.hpp"
 
@@ -14,13 +15,11 @@ using std::sort;
 BeamNRPA::BeamNRPA(const int n)
 : NRPA(n) {}
 
-
 Playout BeamNRPA::generate(const int level, const int numberOfPlayouts) {
 	unordered_map<string, float> startingPolicy;
 	startingPolicy = bestPolicy;
 
-	Beam res = nestedSearch(level, startingPolicy, numberOfPlayouts);
-	return make_pair(get<1>(res.front()), get<0>(res.front()));
+	return NRPAnestedSearch(level, startingPolicy, numberOfPlayouts);
 }
 
 
@@ -30,6 +29,8 @@ Beam BeamNRPA::nestedSearch(const int level, unordered_map< string, float > pol,
 		return {make_tuple(tmp.second, tmp.first, pol)};
 	}
 
+	assert(level == 1);
+	
 	Beam beam, newBeam;
 	beam.push_back(make_tuple(-1, "", pol));
 
@@ -61,4 +62,28 @@ Beam BeamNRPA::nestedSearch(const int level, unordered_map< string, float > pol,
 		bestPolicy = get<2>(beam.front());
 	}
 	return beam;
+}
+
+Playout BeamNRPA::NRPAnestedSearch(const int level, unordered_map<string, float> pol, const int numberOfPlayouts) {
+	if (level == 0)
+		return samplePlayout(pol);
+	else if (level == 1) {
+		Beam res = nestedSearch(level, pol, numberOfPlayouts);
+		return make_pair(get<1>(res.front()), get<0>(res.front()));
+	}
+
+	Playout res = getRoot();
+	for (int p = 0; p < numberOfPlayouts; ++p) {
+		Playout tmp = NRPAnestedSearch(level - 1, pol, numberOfPlayouts);
+		if (tmp.second > res.second)
+			res = tmp;
+		adapt(res.first, pol);
+	}
+
+	if (res.second > bestScore) {
+		bestScore = res.second;
+		bestPolicy = pol;
+	}
+
+	return res;
 }

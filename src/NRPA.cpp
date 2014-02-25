@@ -32,7 +32,7 @@ Playout NRPA::generate(const int level, const int numberOfPlayouts) {
 }
 
 Playout NRPA::operator()(const int level, const int numberOfPlayouts) {
-	return generate(level, numberOfPlayouts);
+	return this->generate(level, numberOfPlayouts);
 }
 
 Playout NRPA::nestedSearch(const int level, unordered_map<string, float> pol, const int numberOfPlayouts) {

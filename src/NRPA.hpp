@@ -19,7 +19,7 @@ public:
 	/**
 	 * @brief This function generates the best string of length n.
 	 */
-	Playout generate(const int level, const int numberOfPlayouts);
+	virtual Playout generate(const int level, const int numberOfPlayouts);
 
 	Playout operator()(const int level, const int numberOfPlayouts);
 
@@ -40,14 +40,15 @@ protected:
 
  	std::unordered_map<std::string, float> bestPolicy;	//std::string so that it compiles
 							//without having to implement hash for Playout 'type'
+
+	
+	Playout getRoot() const;
 	int bestScore;
+	
 private:
 	const std::vector<Move> MOVES = {'0', '1'};
 	const size_t n;
 	unsigned int* countBuffer;
-
-
-	Playout getRoot() const;
 };
 
 #endif // NRPA_HPP

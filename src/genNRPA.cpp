@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 	res = bestRes = make_pair("", -1);
 
 	do {
-		res = gen(3, no);
+		res = gen(2, no);
 		if (res.second > bestRes.second) {
 			printf("\nNew best result: %d\nString: %s\n", res.second, res.first.c_str());
 			bestRes = res;
