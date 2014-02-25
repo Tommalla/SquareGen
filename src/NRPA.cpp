@@ -10,9 +10,9 @@ using std::string;
 using namespace func;
 
 NRPA::NRPA(const size_t n)
-: n{n}
-, countBuffer{new unsigned int[n]}
-, bestScore{-1} {}
+: bestScore{-1}
+, n{n}
+, countBuffer{new unsigned int[n]} {}
 
 NRPA::~NRPA() {
 	delete[] countBuffer;
