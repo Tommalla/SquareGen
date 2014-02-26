@@ -68,26 +68,33 @@ int main(int argc, char** argv) {
 	cout << ss.str();
 
 	Playout best = {"", -1};
+	int prev = -1;
 	int sameCount = 0;
+	int loopCount = 0;
 
 	while (true) {
 		Playout tmp = (*gen)();
 		if (tmp.second > best.second) {
 			best = tmp;
+			prev = tmp.second;
 			cout << "\nNew best Result: " << best.second << "\nString: " << best.first << "\n";
 		} else if (tmp.second == best.second) {
 			if (tmp.first != best.first) {
 				cout << "Same as max, different string!\nString: " << tmp.first << "\n";
 				best = tmp;
-			} else {
-				cout << "Same as max.\n";
-				if (++sameCount >= MAX_SAME) {
-					sameCount = 0;
+				prev = tmp.second;
+				if (++loopCount >= MAX_SAME) {
+					loopCount = 0;
 					gen->resetMemory();
 				}
 			}
-		} else
+		} else {
 			cout << "Score: " << tmp.second << "\n";
+			if (prev == tmp.second && ++sameCount >= MAX_SAME) {
+				sameCount = 0;
+				gen->resetMemory();
+			}
+		}
 	}
 	return 0;
 }

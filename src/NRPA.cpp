@@ -18,6 +18,7 @@ NRPA::NRPA(const size_t n, const int startingLevel, const int numberOfPlayouts,
 
 
 void NRPA::resetMemory() {
+	bestScore = -1;
 	bestPolicy.clear();
 }
 
