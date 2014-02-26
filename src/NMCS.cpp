@@ -16,6 +16,10 @@ Playout NMCS::generate() {
 	return res;
 }
 
+void NMCS::resetMemory() {
+	bestPlayout = {"", -1};
+}
+
 Playout NMCS::nestedSearch(State s, const Playout& bestAvailable, int level) {
 	Playout res = (bestAvailable.first.length() < n) ? make_pair(s, -1) : bestAvailable;
 

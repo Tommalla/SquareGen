@@ -10,6 +10,7 @@ public:
 	virtual ~AbstractMCS();
 
 	Playout operator()();
+	virtual void resetMemory() = 0;
 protected:
 	virtual Playout generate() = 0;
 
