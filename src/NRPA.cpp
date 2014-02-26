@@ -16,12 +16,17 @@ NRPA::NRPA(const size_t n, const int startingLevel, const int numberOfPlayouts,
 , numberOfPlayouts{numberOfPlayouts}
 , alpha{alpha} {}
 
-Playout NRPA::generate() {
-	return nestedSearch(startingLevel, bestPolicy, numberOfPlayouts);
+
+void NRPA::resetMemory() {
+	bestPolicy.clear();
 }
 
 float NRPA::getAlpha() const {
 	return alpha;
+}
+
+Playout NRPA::generate() {
+	return nestedSearch(startingLevel, bestPolicy, numberOfPlayouts);
 }
 
 Playout NRPA::nestedSearch(const int level, unordered_map<string, float> pol, const int numberOfPlayouts) {

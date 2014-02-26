@@ -21,6 +21,7 @@ protected:
 	 * @brief This function generates the best string of length n.
 	 */
 	virtual Playout generate();
+	virtual void resetMemory();
 
 private:
 	/**

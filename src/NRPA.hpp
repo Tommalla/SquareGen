@@ -17,6 +17,8 @@ public:
 	NRPA(const size_t n, const int startingLevel, const int numberOfPlayouts = 100,
 	     const float alpha = 1.0f, const bool rememberBest = true);
 
+	virtual void resetMemory();
+
 	float getAlpha() const;
 protected:
 	/**

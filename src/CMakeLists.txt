@@ -49,26 +49,20 @@ target_link_libraries(NMCS AbstractMCS common)
 target_link_libraries(NRPA AbstractMCS common)
 target_link_libraries(BeamNRPA NRPA common)
 
-add_executable(genNMCS genNMCS.cpp ${COMMON_HEADERS} ${NMCS_HEADERS})
-target_link_libraries(genNMCS NMCS)
+add_executable(squareGen squareGen.cpp ${COMMON_HEADERS} ${NMCS_HEADERS} ${NRPA_HEADERS} ${BEAM_NRPA_HEADERS})
+target_link_libraries(squareGen NMCS NRPA BeamNRPA)
 
-add_executable(genNRPA genNRPA.cpp ${COMMON_HEADERS} ${NRPA_HEADERS})
-target_link_libraries(genNRPA NRPA)
-
-add_executable(genBeamNRPA genBeamNRPA.cpp ${COMMON_HEADERS} ${BEAM_NRPA_HEADERS})
-target_link_libraries(genBeamNRPA BeamNRPA)
-#
-# add_executable(countTest countTest.cpp ${COMMON_HEADERS})
-# target_link_libraries(countTest common)
+add_executable(countSquares countSquares.cpp ${COMMON_HEADERS})
+target_link_libraries(countSquares common)
 
 add_executable(NMCSTest NMCSTest.cpp ${COMON_HEADERS} ${NMCS_HEADERS})
 target_link_libraries(NMCSTest NMCS)
 
 add_executable(NRPATest NRPATest.cpp ${COMMON_HEADERS} ${NRPA_HEADERS})
 target_link_libraries(NRPATest NRPA)
-#
-# add_executable(countSquares countSquares.cpp ${COMMON_HEADERS})
-# target_link_libraries(countSquares common)
 
 add_executable(BeamNRPATest BeamNRPATest.cpp ${BEAM_NRPA_HEADERS} ${COMMON_HEADERS} ${NRPA_HEADERS})
 target_link_libraries(BeamNRPATest BeamNRPA)
+
+add_executable(countTest countTest.cpp ${COMMON_HEADERS})
+target_link_libraries(countTest common)
