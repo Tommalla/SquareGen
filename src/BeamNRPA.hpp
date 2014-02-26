@@ -9,10 +9,11 @@ typedef std::vector<BeamElem> Beam;
 
 class BeamNRPA: public NRPA {
 public:
-	BeamNRPA(const int n);
-	virtual Playout generate(const int level, const int numberOfPlayouts);
+	BeamNRPA(const size_t n, const int startingLevel, const int numberOfPlayouts = 100,
+		 const int beamSize = 4, const float alpha = 1.0f, const bool rememberBest = true);
+	virtual Playout generate();
 protected:
-	const int B = 2;	//Beam size
+	const int B;	//Beam size
 
 	Beam nestedSearch(const int level, std::unordered_map< std::string, float > pol, const int numberOfPlayouts);
 private:
