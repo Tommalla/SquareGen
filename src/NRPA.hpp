@@ -5,27 +5,25 @@
 #include <vector>
 #include <unordered_map>
 
+#include "AbstractMCS.hpp"
 #include "types.hpp"
 
 /**
  * @brief This class represents a single instance of NRPA algorithm.
  * It is *not* thread-safe to run the same instance.
  */
-class NRPA {
+class NRPA : public AbstractMCS {
 public:
-	NRPA(const size_t n);
-	~NRPA();
+	NRPA(const size_t n, const int startingLevel, const int numberOfPlayouts = 100,
+	     const float alpha = 1.0f, const bool rememberBest = true);
 
+	float getAlpha() const;
+protected:
 	/**
 	 * @brief This function generates the best string of length n.
 	 */
-	virtual Playout generate(const int level, const int numberOfPlayouts);
+	virtual Playout generate();
 
-	Playout operator()(const int level, const int numberOfPlayouts);
-
-	const float ALPHA = 1.0f;
-
-protected:
 	/**
 	 * @brief Performs a Nested Rollout Policy Adaptation with parameter level;
 	 */
@@ -38,17 +36,15 @@ protected:
 
 	void adapt(const State& s, std::unordered_map<std::string, float>& pol);
 
- 	std::unordered_map<std::string, float> bestPolicy;	//std::string so that it compiles
-							//without having to implement hash for Playout 'type'
-
-	
 	Playout getRoot() const;
+
+	std::unordered_map<std::string, float> bestPolicy;	//std::string so that it compiles
+							//without having to implement hash for Playout 'type'
 	int bestScore;
-	
+
 private:
-	const std::vector<Move> MOVES = {'0', '1'};
-	const size_t n;
-	unsigned int* countBuffer;
+	int numberOfPlayouts;
+	float alpha;
 };
 
 #endif // NRPA_HPP

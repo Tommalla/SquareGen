@@ -9,30 +9,19 @@ using std::vector;
 using std::string;
 using namespace func;
 
-NRPA::NRPA(const size_t n)
-: bestScore{-1}
-, n{n}
-, countBuffer{new unsigned int[n]} {}
+NRPA::NRPA(const size_t n, const int startingLevel, const int numberOfPlayouts,
+	   const float alpha, const bool rememberBest)
+: AbstractMCS{n, startingLevel, rememberBest}
+, bestScore{-1}
+, numberOfPlayouts{numberOfPlayouts}
+, alpha{alpha} {}
 
-NRPA::~NRPA() {
-	delete[] countBuffer;
+Playout NRPA::generate() {
+	return nestedSearch(startingLevel, bestPolicy, numberOfPlayouts);
 }
 
-Playout NRPA::generate(const int level, const int numberOfPlayouts) {
-	unordered_map<string, float> startingPolicy;
-	startingPolicy = bestPolicy;
-
-	Playout res = nestedSearch(level, startingPolicy, numberOfPlayouts);
-	int realScore = deterministicCountSquares(res.first);
-	if (realScore != res.second) {
-		puts("Error in countSquares!");
-		res.second = realScore;
-	}
-	return res;
-}
-
-Playout NRPA::operator()(const int level, const int numberOfPlayouts) {
-	return this->generate(level, numberOfPlayouts);
+float NRPA::getAlpha() const {
+	return alpha;
 }
 
 Playout NRPA::nestedSearch(const int level, unordered_map<string, float> pol, const int numberOfPlayouts) {
@@ -47,7 +36,7 @@ Playout NRPA::nestedSearch(const int level, unordered_map<string, float> pol, co
 		adapt(res.first, pol);
 	}
 
-	if (res.second > bestScore) {
+	if (rememberBest && res.second > bestScore) {
 		bestScore = res.second;
 		bestPolicy = pol;
 	}
@@ -77,7 +66,7 @@ Playout NRPA::samplePlayout(unordered_map<string, float>& pol) {
 		}
 
 		//perform the move
-		s = play(s, chosen);
+		makeMove(s, chosen);
 	}
 
 	return make_pair(s, countSquares(s, countBuffer));
@@ -97,7 +86,7 @@ void NRPA::adapt(const State& s, unordered_map<string, float>& pol) {
 		exps.clear();
 		states.clear();
 
-		changed[play(cur, m)] += ALPHA;
+		changed[play(cur, m)] += alpha;
 		float z = 0.0f;
 		for (Move next: MOVES) {
 			states.push_back(play(cur, next));
@@ -106,9 +95,9 @@ void NRPA::adapt(const State& s, unordered_map<string, float>& pol) {
 		}
 
 		for (size_t i = 0; i < exps.size(); ++i)
-			changed[states[i]] -= ALPHA * exps[i] / z;
+			changed[states[i]] -= alpha * exps[i] / z;
 
-		cur = play(cur, m);
+		makeMove(cur, m);
 	}
 
 	for (auto c: changed)

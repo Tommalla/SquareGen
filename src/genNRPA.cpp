@@ -16,13 +16,13 @@ int main(int argc, char** argv) {
 	const int no = atoi(argv[2]);
 	unsigned int seed = time(NULL);
 	srand(seed);
-	NRPA gen(n);
-	printf("Starting string creation with NRPA for n = %d, ALPHA = %.3f and seed = %u\n", n, gen.ALPHA, seed);
+	NRPA gen(n, 2, no);
+	printf("Starting string creation with NRPA for n = %d, ALPHA = %.3f and seed = %u\n", n, gen.getAlpha(), seed);
 	Playout bestRes, res;
 	res = bestRes = make_pair("", -1);
 
 	do {
-		res = gen(2, no);
+		res = gen();
 		if (res.second > bestRes.second) {
 			printf("\nNew best result: %d\nString: %s\n", res.second, res.first.c_str());
 			bestRes = res;

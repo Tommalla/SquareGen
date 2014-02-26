@@ -45,7 +45,9 @@ namespace func {
 	 */
 	State play(const State& s, const Move move);
 
-    inline void makeMove(State& s, const Move move);
+	inline void makeMove(State& s, const Move move) {
+		s.push_back(move);
+	}
 };
 
 #endif // FUNC_HPP
