@@ -40,10 +40,10 @@ protected:
 
 	std::unordered_map<std::string, float> bestPolicy;	//std::string so that it compiles
 							//without having to implement hash for Playout 'type'
-	int bestScore;
 
-private:
+	int bestScore;
 	int numberOfPlayouts;
+private:
 	float alpha;
 };
 
