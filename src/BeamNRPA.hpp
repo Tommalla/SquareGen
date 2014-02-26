@@ -15,12 +15,12 @@ public:
 protected:
 	const int B;	//Beam size
 
-	Beam nestedSearch(const int level, std::unordered_map< std::string, float > pol, const int numberOfPlayouts);
+	virtual Playout nestedSearch(const int level, std::unordered_map< std::string, float > pol, const int numberOfPlayouts);
 private:
 	/**
 	 * @brief Performs a Nested Rollout Policy Adaptation with parameter level;
 	 */
-	Playout NRPAnestedSearch(const int level, std::unordered_map<std::string, float> pol, const int numberOfPlayouts);
+	Beam beamNestedSearch(const int level, std::unordered_map<std::string, float> pol, const int numberOfPlayouts);
 };
 
 #endif // BEAM_NRPA_HPP

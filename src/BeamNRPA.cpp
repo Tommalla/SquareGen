@@ -19,16 +19,24 @@ BeamNRPA::BeamNRPA(const size_t n, const int startingLevel, const int numberOfPl
 {}
 
 Playout BeamNRPA::generate() {
-	return NRPAnestedSearch(startingLevel, bestPolicy, numberOfPlayouts);
+	return nestedSearch(startingLevel, bestPolicy, numberOfPlayouts);
 }
 
-Beam BeamNRPA::nestedSearch(const int level, unordered_map< string, float > pol, const int numberOfPlayouts) {
+Playout BeamNRPA::nestedSearch(const int level, unordered_map< string, float > pol, const int numberOfPlayouts) {
+	if (level > 1)
+		return NRPA::nestedSearch(level, pol, numberOfPlayouts);
+
+	assert(level == 1);
+
+	BeamElem f = beamNestedSearch(level, pol, numberOfPlayouts).front();
+	return make_pair(get<1>(f), get<0>(f));
+}
+
+Beam BeamNRPA::beamNestedSearch(const int level, unordered_map< string, float > pol, const int numberOfPlayouts) {
 	if (level == 0) {
 		auto tmp = samplePlayout(pol);
 		return {make_tuple(tmp.second, tmp.first, pol)};
 	}
-
-	assert(level == 1);
 
 	Beam beam, newBeam;
 	beam.push_back(make_tuple(-1, "", pol));
@@ -37,7 +45,7 @@ Beam BeamNRPA::nestedSearch(const int level, unordered_map< string, float > pol,
 		newBeam.clear();
 		for (const auto& t: beam) {
 			newBeam.push_back(t);
-			Beam tmpBeam = nestedSearch(level - 1, get<2>(t), numberOfPlayouts);
+			Beam tmpBeam = beamNestedSearch(level - 1, get<2>(t), numberOfPlayouts);
 			for (auto& b: tmpBeam) {
 				get<2>(b) = pol;
 				adapt(get<1>(b), get<2>(b));
@@ -61,28 +69,4 @@ Beam BeamNRPA::nestedSearch(const int level, unordered_map< string, float > pol,
 		bestPolicy = get<2>(beam.front());
 	}
 	return beam;
-}
-
-Playout BeamNRPA::NRPAnestedSearch(const int level, unordered_map<string, float> pol, const int numberOfPlayouts) {
-	if (level == 0)
-		return samplePlayout(pol);
-	else if (level == 1) {
-		Beam res = nestedSearch(level, pol, numberOfPlayouts);
-		return make_pair(get<1>(res.front()), get<0>(res.front()));
-	}
-
-	Playout res = getRoot();
-	for (int p = 0; p < numberOfPlayouts; ++p) {
-		Playout tmp = NRPAnestedSearch(level - 1, pol, numberOfPlayouts);
-		if (tmp.second > res.second)
-			res = tmp;
-		adapt(res.first, pol);
-	}
-
-	if (res.second > bestScore) {
-		bestScore = res.second;
-		bestPolicy = pol;
-	}
-
-	return res;
 }

@@ -29,7 +29,7 @@ protected:
 	/**
 	 * @brief Performs a Nested Rollout Policy Adaptation with parameter level;
 	 */
-	Playout nestedSearch(const int level, std::unordered_map<std::string, float> pol, const int numberOfPlayouts);
+	virtual Playout nestedSearch(const int level, std::unordered_map<std::string, float> pol, const int numberOfPlayouts);
 
 	/**
 	 * @brief Performs a random playout starting from the root.
