@@ -15,7 +15,7 @@ using std::shared_ptr;
 using std::stringstream;
 using std::cout;
 
-const int MAX_SAME = 5;
+int MAX_SAME;
 const string use = string{"Wrong usage!\nThe correct usage is: ./squareGen <method> <n> <level> <options>\nPossible <method> "} +
 		string{"can be NMCS, NRPA or BeamNRPA\n<options> are:\n\t-for NMCS: none\n\t-for NRPA: <number_of_playouts>\n\t"} +
 		string{"-for BeamNRPA: <number_of_playouts> <size_of_beam>\n"};
@@ -41,11 +41,14 @@ int main(int argc, char** argv) {
 
 	if (method == "NMCS") {
 		gen = shared_ptr<AbstractMCS>{new NMCS{n, level}};
+		MAX_SAME = 10;
 	} else {
 		if (argc < 5) {
 			cout << use;
 			return 1;
 		}
+
+		MAX_SAME = 3;
 
 		int no = atoi(argv[4]);
 		ss << ", number_of_playouts = " << no;
@@ -55,6 +58,8 @@ int main(int argc, char** argv) {
 				cout << use;
 				return 1;
 			}
+
+			MAX_SAME = 2;
 
 			int beam = atoi(argv[5]);
 			ss << ", beam_size = " << beam;
