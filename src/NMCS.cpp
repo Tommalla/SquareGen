@@ -4,31 +4,16 @@
 using std::make_pair;
 using namespace func;
 
-NMCS::NMCS(const size_t n)
-: n{n}
-, countBuffer{new unsigned int[n]}
-, bestPlayout("", -1) {}
+NMCS::NMCS(const size_t n, const int startingLevel, const bool rememberBest)
+: AbstractMCS::AbstractMCS{n, startingLevel, rememberBest}
+, bestPlayout{"", -1} {}
 
-NMCS::~NMCS() {
-	delete[] countBuffer;
-}
+Playout NMCS::generate() {
+	Playout res = nestedSearch("", bestPlayout, startingLevel);
 
-Playout NMCS::generate(const int level) {
-// 	bestPlayout = make_pair("", -1);
-	Playout res = nestedSearch("", bestPlayout, level);
-	int realScore = deterministicCountSquares(res.first);
-	if (realScore != res.second) {
-		puts("countError!");
-		res.second = realScore;
-	}
-
-	if (res.second > bestPlayout.second)
+	if (rememberBest && res.second > bestPlayout.second)
 		bestPlayout = res;
 	return res;
-}
-
-Playout NMCS::operator()(const int level) {
-	return generate(level);
 }
 
 Playout NMCS::nestedSearch(State s, const Playout& bestAvailable, int level) {
@@ -69,5 +54,3 @@ Playout NMCS::samplePlayout(State s) {
 		s = play(s, MOVES[random() % MOVES.size()]);
 	return make_pair(s, countSquares(s, countBuffer));
 }
-
-

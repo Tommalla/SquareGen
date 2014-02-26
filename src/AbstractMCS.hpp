@@ -6,7 +6,7 @@
 
 class AbstractMCS {
 public:
-	AbstractMCS(const size_t n, const bool rememberBest = true);
+	AbstractMCS(const size_t n, const int startingLevel, const bool rememberBest = true);
 	virtual ~AbstractMCS();
 
 	Playout operator()();
@@ -15,9 +15,9 @@ protected:
 
 	const std::vector<char> MOVES = {'0', '1'};
 	const size_t n;
-	unsigned int* countBuffer;
+	int startingLevel;
 	bool rememberBest;
-	Playout bestPlayout;
+	unsigned int* countBuffer;
 };
 
 #endif // ABSTRACT_MCS_HPP

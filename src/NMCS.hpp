@@ -4,6 +4,7 @@
 #include <utility>
 #include <vector>
 
+#include "AbstractMCS.hpp"
 #include "types.hpp"
 
 /**
@@ -11,35 +12,29 @@
  * It is *not* thread-safe to run the same instance.
  *
  */
-class NMCS {
+class NMCS : public AbstractMCS {
 public:
-	NMCS(const size_t n);
-	~NMCS();
+	NMCS(const size_t n, const int startingLevel, const bool rememberBest = true);
 
+protected:
 	/**
 	 * @brief This function generates the best string of length n.
 	 */
-	Playout generate(const int level);
-
-	Playout operator()(const int level);
+	virtual Playout generate();
 
 private:
-	const std::vector<char> MOVES = {'0', '1'};
-	const size_t n;
-	unsigned int* countBuffer;
-	Playout bestPlayout;
-
 	/**
 	 * @brief Performs a Nested Monte Carlo Search with parameter level; starting from state s, knowing that there
 	 * are n moves to be made before the end of game.
 	 */
 	Playout nestedSearch(State s, const Playout& bestAvailable, int level);
 
-
 	/**
 	 * @brief Performs a random playout starting from state s.
 	 */
 	Playout samplePlayout(State s);
+
+	Playout bestPlayout;
 };
 
 #endif // NMCS_HPP

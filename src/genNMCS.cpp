@@ -18,10 +18,11 @@ int main(int argc, char** argv) {
 	printf("Starting string creation for n = %d and seed = %u\n", n, seed);
 	Playout bestRes, res;
 	res = bestRes = make_pair("", -1);
-	NMCS gen(n);
-	res = gen(3);
+	NMCS gen(n, 2);
 
 	do {
+		res = gen();
+
 		if (res.second > bestRes.second) {
 			printf("\nNew best result: %d\nString: %s\n", res.second, res.first.c_str());
 			bestRes = res;
@@ -29,8 +30,6 @@ int main(int argc, char** argv) {
 			printf(".");
 			fflush(stdout);
 		}
-
-		res = gen(1);
 	} while (true);
 	return 0;
 }
