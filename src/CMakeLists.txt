@@ -58,14 +58,8 @@ target_link_libraries(countSquares common)
 add_executable(testMCS testMCS.cpp ${COMMON_HEADERS} ${NMCS_HEADERS} ${NRPA_HEADERS} ${BEAM_NRPA_HEADERS})
 target_link_libraries(testMCS NMCS NRPA BeamNRPA)
 
-# add_executable(NMCSTest NMCSTest.cpp ${COMON_HEADERS} ${NMCS_HEADERS})
-# target_link_libraries(NMCSTest NMCS)
-
-# add_executable(NRPATest NRPATest.cpp ${COMMON_HEADERS} ${NRPA_HEADERS})
-# target_link_libraries(NRPATest NRPA)
-
-# add_executable(BeamNRPATest BeamNRPATest.cpp ${BEAM_NRPA_HEADERS} ${COMMON_HEADERS} ${NRPA_HEADERS})
-# target_link_libraries(BeamNRPATest BeamNRPA)
-
 add_executable(countTest countTest.cpp ${COMMON_HEADERS})
 target_link_libraries(countTest common)
+
+add_executable(experiment experiment.cpp ${COMMON_HEADERS})
+target_link_libraries(experiment common)
