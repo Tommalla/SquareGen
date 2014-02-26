@@ -44,6 +44,8 @@ namespace func {
 	 * @param move The move to be made
 	 */
 	State play(const State& s, const Move move);
+
+    inline void makeMove(State& s, const Move move);
 };
 
 #endif // FUNC_HPP
