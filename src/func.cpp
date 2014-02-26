@@ -91,3 +91,7 @@ State func::play(const State& s, const Move move) {
 	return res;
 }
 
+void func::makeMove(State& s, const Move move) {
+    s.push_back(move);
+}
+
