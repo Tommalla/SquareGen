@@ -1,4 +1,5 @@
 #include "AbstractMCS.hpp"
+#include "func.hpp"
 
 AbstractMCS::AbstractMCS(const size_t n, const bool rememberBest)
 : n{n}
@@ -12,6 +13,10 @@ AbstractMCS::~AbstractMCS() {
 }
 
 Playout AbstractMCS::operator()() {
-	return generate();
+	Playout res = generate();
+	int realCount = func::deterministicCountSquares(res.first);
+	if (realCount != res.second)
+		puts("Error in countSquares!");
+	return res;
 }
 
