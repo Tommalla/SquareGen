@@ -22,6 +22,10 @@ void NRPA::resetMemory() {
 	bestPolicy.clear();
 }
 
+void NRPA::setBest(Playout&& p) {
+	adapt(p.first, bestPolicy);
+}
+
 float NRPA::getAlpha() const {
 	return alpha;
 }

@@ -11,8 +11,10 @@ public:
 
 	Playout operator()();
 	virtual void resetMemory() = 0;
+	void setBestResult(const State& s);
 protected:
 	virtual Playout generate() = 0;
+	virtual void setBest(Playout&& p) = 0;
 
 	const std::vector<char> MOVES = {'0', '1'};
 	const size_t n;

@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
 	size_t n = atoi(argv[2]);
 	int level = atoi(argv[3]);
 	string method = argv[1];
+	int argCount = 3;
 
 	unsigned int seed = time(NULL);
 	srand(seed);
@@ -49,6 +50,7 @@ int main(int argc, char** argv) {
 		}
 
 		MAX_SAME = 3;
+		argCount++;
 
 		int no = atoi(argv[4]);
 		ss << ", number_of_playouts = " << no;
@@ -60,6 +62,7 @@ int main(int argc, char** argv) {
 			}
 
 			MAX_SAME = 2;
+			argCount++;
 
 			int beam = atoi(argv[5]);
 			ss << ", beam_size = " << beam;
@@ -68,6 +71,9 @@ int main(int argc, char** argv) {
 		} else
 			gen = shared_ptr<AbstractMCS>{new NRPA{n, level, no}};
 	}
+
+	if (argc > argCount)
+		gen->setBestResult(argv[argCount]);
 
 	ss << "\n";
 	cout << ss.str();
@@ -83,15 +89,13 @@ int main(int argc, char** argv) {
 			best = tmp;
 			prev = tmp.second;
 			cout << "\nNew best Result: " << best.second << "\nString: " << best.first << "\n";
-		} else if (tmp.second == best.second) {
-			if (tmp.first != best.first) {
-				cout << "Same as max, different string!\nString: " << tmp.first << "\n";
-				best = tmp;
-				prev = tmp.second;
-				if (++loopCount >= MAX_SAME) {
-					loopCount = 0;
-					gen->resetMemory();
-				}
+		} else if (tmp.second == best.second && tmp.first != best.first) {
+			cout << "Same as max, different string!\nString: " << tmp.first << "\n";
+			best = tmp;
+			prev = tmp.second;
+			if (++loopCount >= MAX_SAME) {
+				loopCount = 0;
+				gen->resetMemory();
 			}
 		} else {
 			cout << "Score: " << tmp.second << "\n";

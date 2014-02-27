@@ -22,6 +22,7 @@ protected:
 	 */
 	virtual Playout generate();
 	virtual void resetMemory();
+	virtual void setBest(Playout&& p);
 
 private:
 	/**
