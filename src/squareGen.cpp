@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
 	Playout best = {"", -1};
 	int prev = -1;
 	int sameCount = 0;
-	int loopCount = 0;
+// 	int loopCount = 0;
 
 	while (true) {
 		Playout tmp = (*gen)();
@@ -93,10 +93,10 @@ int main(int argc, char** argv) {
 			cout << "Same as max, different string!\nString: " << tmp.first << "\n";
 			best = tmp;
 			prev = tmp.second;
-			if (++loopCount >= MAX_SAME) {
-				loopCount = 0;
-				gen->resetMemory();
-			}
+// 			if (++loopCount >= MAX_SAME) {
+// 				loopCount = 0;
+// 				gen->resetMemory();
+// 			}
 		} else {
 			cout << "Score: " << tmp.second << "\n";
 			if (prev == tmp.second && ++sameCount >= MAX_SAME) {

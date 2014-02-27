@@ -22,6 +22,12 @@ void NRPA::resetMemory() {
 	bestPolicy.clear();
 }
 
+void NRPA::combinePolicies(const unordered_map< string, float >& toAdd) {
+	for (auto k: toAdd)
+		bestPolicy[k.first] = (bestPolicy[k.first] + k.second) / 2;
+}
+
+
 void NRPA::setBest(Playout&& p) {
 	adapt(p.first, bestPolicy);
 }
@@ -46,9 +52,12 @@ Playout NRPA::nestedSearch(const int level, unordered_map<string, float> pol, co
 		adapt(res.first, pol);
 	}
 
-	if (rememberBest && res.second > bestScore) {
-		bestScore = res.second;
-		bestPolicy = pol;
+	if (rememberBest) {
+		if (res.second > bestScore) {
+			bestScore = res.second;
+			bestPolicy = pol;
+		} else if (res.second == bestScore)
+			combinePolicies(pol);
 	}
 
 	return res;
