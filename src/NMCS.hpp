@@ -15,13 +15,14 @@
 class NMCS : public AbstractMCS {
 public:
 	NMCS(const size_t n, const int startingLevel, const bool rememberBest = true);
+	virtual void resetMemory();
+	virtual void mutateBestSolution();
 
 protected:
 	/**
 	 * @brief This function generates the best string of length n.
 	 */
 	virtual Playout generate();
-	virtual void resetMemory();
 	virtual void setBest(Playout&& p);
 
 private:

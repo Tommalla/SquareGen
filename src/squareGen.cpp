@@ -15,14 +15,13 @@ using std::shared_ptr;
 using std::stringstream;
 using std::cout;
 
-int MAX_SAME;
-const string use = string{"Wrong usage!\nThe correct usage is: ./squareGen <method> <n> <level> <options>\nPossible <method> "} +
+const string use = string{"Wrong usage!\nThe correct usage is: ./squareGen <method> <n> <level> <max_same> <options>\nPossible <method> "} +
 		string{"can be NMCS, NRPA or BeamNRPA\n<options> are:\n\t-for NMCS: none\n\t-for NRPA: <number_of_playouts>\n\t"} +
 		string{"-for BeamNRPA: <number_of_playouts> <size_of_beam>\n"};
 
 
 int main(int argc, char** argv) {
-	if (argc < 4) {
+	if (argc < 5) {
 		cout << use;
 		return 1;
 	}
@@ -30,7 +29,8 @@ int main(int argc, char** argv) {
 	size_t n = atoi(argv[2]);
 	int level = atoi(argv[3]);
 	string method = argv[1];
-	int argCount = 3;
+        int maxSame = atoi(argv[4]);
+	int argCount = 5;
 
 	unsigned int seed = time(NULL);
 	srand(seed);
@@ -42,29 +42,23 @@ int main(int argc, char** argv) {
 
 	if (method == "NMCS") {
 		gen = shared_ptr<AbstractMCS>{new NMCS{n, level}};
-		MAX_SAME = 10;
 	} else {
-		if (argc < 5) {
+		if (argc < ++argCount) {
 			cout << use;
 			return 1;
 		}
 
-		MAX_SAME = 3;
-		argCount++;
-
-		int no = atoi(argv[4]);
+		int no = atoi(argv[argCount - 1]);
 		ss << ", number_of_playouts = " << no;
 
 		if (method == "BeamNRPA") {
-			if (argc < 6) {
+			if (argc < ++argCount) {
 				cout << use;
 				return 1;
 			}
 
-			MAX_SAME = 2;
-			argCount++;
 
-			int beam = atoi(argv[5]);
+			int beam = atoi(argv[argCount - 1]);
 			ss << ", beam_size = " << beam;
 
 			gen = shared_ptr<AbstractMCS>{new BeamNRPA{n, level, no, beam}};
@@ -81,7 +75,7 @@ int main(int argc, char** argv) {
 	Playout best = {"", -1};
 	int prev = -1;
 	int sameCount = 0;
-// 	int loopCount = 0;
+	int loopCount = 0;
 
 	while (true) {
 		Playout tmp = (*gen)();
@@ -89,19 +83,25 @@ int main(int argc, char** argv) {
 			best = tmp;
 			prev = tmp.second;
 			cout << "\nNew best Result: " << best.second << "\nString: " << best.first << "\n";
-		} else if (tmp.second == best.second && tmp.first != best.first) {
-			cout << "Same as max, different string!\nString: " << tmp.first << "\n";
-			best = tmp;
+                        loopCount = sameCount = 0;
+        } else if (tmp.second == best.second && tmp.first != best.first) {
+		cout << "Same as max, different string!\nString: " << tmp.first << "\n";
+		best = tmp;
+		prev = tmp.second;
+		if (++loopCount >= maxSame) {
+			loopCount = 0;
 			prev = tmp.second;
-// 			if (++loopCount >= MAX_SAME) {
-// 				loopCount = 0;
-// 				gen->resetMemory();
-// 			}
-		} else {
+			puts("Mutating");
+			gen->mutateBestSolution();
+			//gen->resetMemory();
+		}
+	} else {
 			cout << "Score: " << tmp.second << "\n";
-			if (prev == tmp.second && ++sameCount >= MAX_SAME) {
+			if (prev == tmp.second && ++sameCount >= maxSame) {
 				sameCount = 0;
-				gen->resetMemory();
+// 				gen->resetMemory();
+				puts("Mutating");
+				gen->mutateBestSolution();
 			}
 		}
 	}

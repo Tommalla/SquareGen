@@ -20,6 +20,14 @@ void NMCS::resetMemory() {
 	bestPlayout = {"", -1};
 }
 
+void NMCS::mutateBestSolution() {
+	for (auto& m: bestPlayout.first)
+		if (randomTest(MUTATION_PROBABILITY))
+			m = (m == '0') ? '1' : '0';
+        bestPlayout.second = deterministicCountSquares(bestPlayout.first);
+}
+
+
 void NMCS::setBest(Playout&& p) {
 	bestPlayout = std::move(p);
 }
@@ -48,7 +56,7 @@ Playout NMCS::nestedSearch(State s, const Playout& bestAvailable, int level) {
 		if (bestScore < bestAvailable.second)
 			best = bestAvailable.first[s.length()];
 
-		s = play(s, best);
+		makeMove(s, best);
 	}
 
 	if (res.second == bestAvailable.second && res.first != bestAvailable.first)

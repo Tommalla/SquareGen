@@ -18,6 +18,7 @@ public:
 	     const float alpha = 1.0f, const bool rememberBest = true);
 
 	virtual void resetMemory();
+	virtual void mutateBestSolution();
 
 	float getAlpha() const;
 protected:

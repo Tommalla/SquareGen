@@ -31,4 +31,9 @@ void AbstractMCS::setBestResult(const State& s) {
 	setBest(std::move(res));
 }
 
+bool AbstractMCS::randomTest(const float prob) const {
+	return (float)(random() % 101) / 100.0f <= prob;
+}
+
+
 

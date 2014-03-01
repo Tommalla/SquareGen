@@ -32,6 +32,14 @@ void NRPA::setBest(Playout&& p) {
 	adapt(p.first, bestPolicy);
 }
 
+void NRPA::mutateBestSolution() {
+	for (auto& k: bestPolicy)
+		if (randomTest(MUTATION_PROBABILITY)) {
+			bestPolicy[k.first]  += alpha;
+		}
+}
+
+
 float NRPA::getAlpha() const {
 	return alpha;
 }
@@ -56,8 +64,7 @@ Playout NRPA::nestedSearch(const int level, unordered_map<string, float> pol, co
 		if (res.second > bestScore) {
 			bestScore = res.second;
 			bestPolicy = pol;
-		} else if (res.second == bestScore)
-			combinePolicies(pol);
+		}
 	}
 
 	return res;
