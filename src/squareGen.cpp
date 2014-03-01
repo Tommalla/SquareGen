@@ -85,29 +85,27 @@ int main(int argc, char** argv) {
 		Playout tmp = (*gen)();
 		if (tmp.second > best.second) {
 			best = tmp;
-			prev = tmp.second;
 			cout << "\nNew best Result: " << best.second << "\nString: " << best.first << "\n";
                         loopCount = sameCount = 0;
-        } else if (tmp.second == best.second && tmp.first != best.first) {
-		cout << "Same as max, different string!\nString: " << tmp.first << "\n";
-		best = tmp;
-		prev = tmp.second;
-		if (++loopCount >= maxSame) {
-			loopCount = 0;
-			prev = tmp.second;
-			puts("Mutating");
-			gen->mutateBestSolution();
-			//gen->resetMemory();
-		}
-	} else {
-			cout << "Score: " << tmp.second << "\n";
-			if (prev == tmp.second && ++sameCount >= maxSame) {
-				sameCount = 0;
-// 				gen->resetMemory();
+		} else if (tmp.second == best.second && tmp.first != best.first) {
+			cout << "Same as max, different string!\nString: " << tmp.first << "\n";
+			best = tmp;
+			if (++loopCount >= maxSame) {
+				loopCount = 0;
 				puts("Mutating");
 				gen->mutateBestSolution();
+				//gen->resetMemory();
 			}
-		}
+		} else {
+				cout << "Score: " << tmp.second << "\n";
+				if (prev == tmp.second && ++sameCount >= maxSame) {
+					sameCount = 0;
+	// 				gen->resetMemory();
+					puts("Mutating");
+					gen->mutateBestSolution();
+				}
+			}
+		prev = tmp.second;
 	}
 	return 0;
 }
