@@ -30,7 +30,7 @@ protected:
 	virtual Playout generate();
 
 	/**
-	 * @brief Performs a Nested Rollout Policy Adaptation with parameter level;
+	 * @brief Performs a Nested Rollout Policy Adaptation with parameter level
 	 */
 	virtual Playout nestedSearch(const int level, std::unordered_map<std::string, float> pol, const int numberOfPlayouts);
 
@@ -48,6 +48,8 @@ protected:
 
 	int bestScore;
 	int numberOfPlayouts;
+	const int ADAPTS_OF_BEST = 6;
+	bool mutated;
 private:
 	float alpha;
 };

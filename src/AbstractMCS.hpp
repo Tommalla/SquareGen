@@ -27,11 +27,12 @@ protected:
 	virtual void setBest(Playout&& p) = 0;
 	bool randomTest(const float prob) const;
 
-	const float MUTATION_PROBABILITY = 0.33f;
+	const float MUTATION_PROBABILITY = 0.2f;
 	const std::vector<char> MOVES = {'0', '1'};
 	const size_t n;
 	int startingLevel;
 	bool rememberBest;
+	bool mutated;
 	unsigned int* countBuffer;
 };
 

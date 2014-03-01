@@ -11,8 +11,10 @@ NMCS::NMCS(const size_t n, const int startingLevel, const bool rememberBest)
 Playout NMCS::generate() {
 	Playout res = nestedSearch("", bestPlayout, startingLevel);
 
-	if (rememberBest && res.second > bestPlayout.second)
+	if (rememberBest && (mutated || res.second > bestPlayout.second)) {
+		mutated = false;
 		bestPlayout = res;
+	}
 	return res;
 }
 
@@ -24,7 +26,8 @@ void NMCS::mutateBestSolution() {
 	for (auto& m: bestPlayout.first)
 		if (randomTest(MUTATION_PROBABILITY))
 			m = (m == '0') ? '1' : '0';
-        bestPlayout.second = deterministicCountSquares(bestPlayout.first);
+	bestPlayout.second = deterministicCountSquares(bestPlayout.first);
+	mutated = true;
 }
 
 

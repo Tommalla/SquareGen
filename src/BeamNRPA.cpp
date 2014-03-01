@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <cassert>
 
 #include "BeamNRPA.hpp"
 
@@ -25,8 +24,6 @@ Playout BeamNRPA::generate() {
 Playout BeamNRPA::nestedSearch(const int level, unordered_map< string, float > pol, const int numberOfPlayouts) {
 	if (level > 1)
 		return NRPA::nestedSearch(level, pol, numberOfPlayouts);
-
-	assert(level == 1);
 
 	BeamElem f = beamNestedSearch(level, pol, numberOfPlayouts).front();
 	return make_pair(get<1>(f), get<0>(f));
@@ -64,7 +61,8 @@ Beam BeamNRPA::beamNestedSearch(const int level, unordered_map< string, float > 
 			beam.push_back(newBeam[i]);
 	}
 
-	if (rememberBest && get<0>(beam.front()) > bestScore) {
+	if (rememberBest && (mutated || get<0>(beam.front()) > bestScore)) {
+		mutated = false;
 		bestScore = get<0>(beam.front());
 		bestPolicy = get<2>(beam.front());
 	}

@@ -14,6 +14,7 @@ NRPA::NRPA(const size_t n, const int startingLevel, const int numberOfPlayouts,
 : AbstractMCS{n, startingLevel, rememberBest}
 , bestScore{-1}
 , numberOfPlayouts{numberOfPlayouts}
+, mutated{false}
 , alpha{alpha} {}
 
 
@@ -29,7 +30,10 @@ void NRPA::combinePolicies(const unordered_map< string, float >& toAdd) {
 
 
 void NRPA::setBest(Playout&& p) {
-	adapt(p.first, bestPolicy);
+	bestScore = p.second;
+
+	for (int i = 0; i < ADAPTS_OF_BEST; ++i)
+		adapt(p.first, bestPolicy);
 }
 
 void NRPA::mutateBestSolution() {
@@ -37,6 +41,7 @@ void NRPA::mutateBestSolution() {
 		if (randomTest(MUTATION_PROBABILITY)) {
 			bestPolicy[k.first]  += alpha;
 		}
+	mutated = true;
 }
 
 
@@ -61,7 +66,8 @@ Playout NRPA::nestedSearch(const int level, unordered_map<string, float> pol, co
 	}
 
 	if (rememberBest) {
-		if (res.second > bestScore) {
+		if (mutated || res.second > bestScore) {
+			mutated = false;
 			bestScore = res.second;
 			bestPolicy = pol;
 		}

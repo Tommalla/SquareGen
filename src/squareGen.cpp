@@ -15,7 +15,7 @@ using std::shared_ptr;
 using std::stringstream;
 using std::cout;
 
-const string use = string{"Wrong usage!\nThe correct usage is: ./squareGen <method> <n> <level> <max_same> <options>\nPossible <method> "} +
+const string use = string{"Wrong usage!\nThe correct usage is: ./squareGen <method> <n> <level> <max_same> <options> [<initial best result>]\nPossible <method> "} +
 		string{"can be NMCS, NRPA or BeamNRPA\n<options> are:\n\t-for NMCS: none\n\t-for NRPA: <number_of_playouts>\n\t"} +
 		string{"-for BeamNRPA: <number_of_playouts> <size_of_beam>\n"};
 
@@ -31,6 +31,11 @@ int main(int argc, char** argv) {
 	string method = argv[1];
         int maxSame = atoi(argv[4]);
 	int argCount = 5;
+
+	Playout best = {"", -1};
+	int prev = -1;
+	int sameCount = 0;
+	int loopCount = 0;
 
 	unsigned int seed = time(NULL);
 	srand(seed);
@@ -66,16 +71,15 @@ int main(int argc, char** argv) {
 			gen = shared_ptr<AbstractMCS>{new NRPA{n, level, no}};
 	}
 
-	if (argc > argCount)
+	if (argc > argCount) {
 		gen->setBestResult(argv[argCount]);
+		best.first = argv[argCount];
+		prev = best.second = func::deterministicCountSquares(best.first);
+		ss << ", initial string set, inital score = " << best.second;
+	}
 
 	ss << "\n";
 	cout << ss.str();
-
-	Playout best = {"", -1};
-	int prev = -1;
-	int sameCount = 0;
-	int loopCount = 0;
 
 	while (true) {
 		Playout tmp = (*gen)();

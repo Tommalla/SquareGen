@@ -4,12 +4,14 @@
 #include "func.hpp"
 
 using std::make_pair;
+using std::move;
 using namespace func;
 
 AbstractMCS::AbstractMCS(const size_t n, const int startingLevel, const bool rememberBest)
 : n{n}
 , startingLevel{startingLevel}
 , rememberBest{rememberBest}
+, mutated{false}
 , countBuffer{new unsigned int[n]} {}
 
 AbstractMCS::~AbstractMCS() {
@@ -27,8 +29,8 @@ Playout AbstractMCS::operator()() {
 }
 
 void AbstractMCS::setBestResult(const State& s) {
-	Playout res = std::make_pair(s, deterministicCountSquares(s));
-	setBest(std::move(res));
+	Playout res = make_pair(s, deterministicCountSquares(s));
+	setBest(move(res));
 }
 
 bool AbstractMCS::randomTest(const float prob) const {
