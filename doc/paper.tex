@@ -19,21 +19,24 @@
 \maketitle
 
 \section{Wstęp}
-Ten dokument przedstawia analizę jakości i porównanie 3 algorytmów, przy tworzeniu słów zadanej długości ($n$; $200$ oraz $500$) nad alfabetem binarnym (${0, 1}$), zawierających największą możliwą liczbę 
-kwadratów. Algorytmy zastosowane w próbach, to: NMCS - Nested Monte-Carlo Search[1], NRPA - Nested Rollout Policy Adaptation[2], BeamNRPA - Beam Nested Rollout Policy Adaptation[3]. W tej pracy opiszę
-po kolei eksperymenty przeprowadzane na każdym z tych algorytmów, zachowując kolejnośc w jakiej je implementowałem, włącznie z kolejnością wzbogacania standardowych pomysłów o swoje własne.
+Ten dokument przedstawia analizę jakości i porównanie 3 algorytmów, przy tworzeniu słów zadanej długości ($n$; $200$ oraz $500$) 
+nad alfabetem binarnym (${0, 1}$), zawierających największą możliwą liczbę kwadratów. Algorytmy zastosowane w próbach, to: NMCS
+- Nested Monte-Carlo Search[1], NRPA - Nested Rollout Policy Adaptation[2], BeamNRPA - Beam Nested Rollout Policy Adaptation[3].
+W tej pracy opiszę po kolei eksperymenty przeprowadzane na każdym z tych algorytmów, zachowując kolejnośc w jakiej je implementowałem,
+włącznie z kolejnością wzbogacania standardowych pomysłów o swoje własne.
 
 \section{NMCS}
-Algorytm w standardowej implementacji dawał się bez większych problemów wykonywać dla $level \in {0, 1}$. Dla wyższych wartości, robił się wystarczająco wolny, aby kończyła mi się cierpliwość. Tutaj też
-pojawił się pierwszy pomysł optymalizacyjny - zapamiętywanie najlepszego wyniku między wykonywaniem algorytmu. W efekcie, lepiej eksplorujemy lokalne maksima, ale istnieje ryzyko ugrzęźnięcia w takim 
-maksimum. W tamtym momencie problem ten pominąłem uruchamiając po prostu program ponownie, jeśli zbyt długo zwracał ten sam wynik. Przy kolejnych algorytmach podam pewne sposoby radzenia sobie z tym,
-  nad którymi pracowałem.
+Algorytm w standardowej implementacji dawał się bez większych problemów wykonywać dla $level \in {0, 1}$. Dla wyższych wartości, robił
+się wystarczająco wolny, aby kończyła mi się cierpliwość. Tutaj też pojawił się pierwszy pomysł optymalizacyjny - zapamiętywanie najlepszego
+wyniku między wykonywaniem algorytmu. W efekcie, lepiej eksplorujemy lokalne maksima, ale istnieje ryzyko ugrzęźnięcia w takim maksimum. 
+W tamtym momencie problem ten pominąłem uruchamiając po prostu program ponownie, jeśli zbyt długo zwracał ten sam wynik. Przy kolejnych
+algorytmach podam pewne sposoby radzenia sobie z tym, nad którymi pracowałem.
 
 Poniżej prezentuję tabelę typowych wyników otrzymywanych NMCSem dla danych $n$ i $level$ po pewnej ilości iteracji: \\
 \begin{adjustbox}{center}
 \begin{tabularx}{0.7\linewidth}{|X|X|X|X| }
   \hline
-  \multicolumn{4}{|X|}{$level$} \\
+  & \multicolumn{3}{|X|}{$level$} \\
   \hline
   $n$ & $0$ & $1$ & $2$ \\
   \hline
@@ -47,15 +50,17 @@ Poniżej prezentuję tabelę typowych wyników otrzymywanych NMCSem dla danych $
 Widać wyraźną tendencję do poprawy z rosnącym $level$, ale też duży koszt obliczeniowy tej metody.
 
 \section{NRPA}
-Kolejnym zaimplementowanym algorytmem był NRPA. Ten również powstał w dosyć standardowej implementacji i dosyć szybko zaczął osiągać wyniki lepsze niż poprzednik, co przypisuję głównie gradient ascentowi,
-wykorzystywanemu w tej metodzie zamiast prostego podmieniania wyniku na najlepszy. W ten sposób algorytm ma szansę lepiej wyeksplorować przestrzeń rozwiązań nie grzęznąc od razu w lokalnych maksimach. Przez
-większość testów używane były parametry sugerowane przez oryginalnych autorów tej metody: $\alpha = 1.0, N = 100$, gdzie N oznacza ilość wywołań poziomu $level - 1$ na poziomie $level$. W praktyce nie zauważyłem
-specjalnie różnic między $\alpha$ równym $1$, a jakimiś mniejszymi, ale też pod tym kątem dużo nie testowałem. Poniżej przedstawiam tabelę wyników dla tych właśnie ustalonych parametrów.
+Kolejnym zaimplementowanym algorytmem był NRPA. Ten również powstał w dosyć standardowej implementacji i dosyć szybko zaczął osiągać wyniki
+lepsze niż poprzednik, co przypisuję głównie gradient ascentowi, wykorzystywanemu w tej metodzie zamiast prostego podmieniania wyniku na
+najlepszy. W ten sposób algorytm ma szansę lepiej wyeksplorować przestrzeń rozwiązań nie grzęznąc od razu w lokalnych maksimach. Przez większość
+testów używane były parametry sugerowane przez oryginalnych autorów tej metody: $\alpha = 1.0, N = 100$, gdzie N oznacza ilość wywołań poziomu 
+$level - 1$ na poziomie $level$. W praktyce nie zauważyłem specjalnie różnic między $\alpha$ równym $1$, a jakimiś mniejszymi, ale też pod tym
+kątem dużo nie testowałem. Poniżej przedstawiam tabelę wyników dla tych właśnie ustalonych parametrów.
 
 \begin{adjustbox}{center}
 \begin{tabularx}{0.7\linewidth}{|X|X|X|X| }
   \hline
-  \multicolumn{4}{|X|}{$level$} \\
+  & \multicolumn{3}{|X|}{$level$} \\
   \hline
   $n$ & $0$ & $1$ & $2$ \\
   \hline
@@ -66,16 +71,37 @@ specjalnie różnic między $\alpha$ równym $1$, a jakimiś mniejszymi, ale te�
 \end{tabularx}
 \end{adjustbox}
 
-Warto zauważyć, że NRPA z odpowiednio dobranymi parametrami jest dla danego $level$ wyraźnie szybszy niż NMCS, a mimo to generuje lepsze wyniki. W dodatku, algorytm ten jest znacznie stabilniejszy w jakości
-produkowanych ciągów, nigdy nie spadając poniżej pewnych ``porządnych'' wyników.
+Warto zauważyć, że NRPA z odpowiednio dobranymi parametrami jest dla danego $level$ wyraźnie szybszy niż NMCS, a mimo to generuje lepsze wyniki.
+W dodatku, algorytm ten jest znacznie stabilniejszy w jakości produkowanych ciągów, nigdy nie spadając poniżej pewnych ``porządnych'' wyników.
 
-W tym momencie implementacji i testów dodałem do wszystkich algorytmów możliwość resetu pamięci oraz mutacji. Reset działa tak, jakbyśmy uruchomili program od nowa, mutacja zaś, z danym prawdopodobieństem
-($20\%$, możliwe że trochę zbyt dużo) zmienia jakoś nalepsze zapamiętane rozwiązanie. W przypadku NMCS po prostu neguje dany znak, w przypadku NRPA i pochodnych, dla każdego przejścia w policy, z ustalonym
-prawdopodobieństem dodaje wartość 1.0. Okazało się to wygodne do uruchamiania algorytmów na dłuższy okres czasu, kiedy nie muszę pilnować czy nie utknęły one w lokalnych maksimach, bo automatycznie będą z nich
-``wyciągane''.
+W tym momencie implementacji i testów dodałem do wszystkich algorytmów możliwość resetu pamięci oraz mutacji. Reset działa tak, jakbyśmy
+uruchomili program od nowa, mutacja zaś, z danym prawdopodobieństem ($20\%$, możliwe że trochę zbyt dużo) zmienia jakoś nalepsze zapamiętane
+rozwiązanie. W przypadku NMCS po prostu neguje dany znak, w przypadku NRPA i pochodnych, dla każdego przejścia w policy, z ustalonym 
+prawdopodobieństem dodaje wartość 1.0. Okazało się to wygodne do uruchamiania algorytmów na dłuższy okres czasu, kiedy nie muszę pilnować
+czy nie utknęły one w lokalnych maksimach, bo automatycznie będą z nich ``wyciągane''.
 
 \section{BeamNRPA}
-Jako udoskonalenie NRPA zaimplementowałem wersję z ławą. Zgodnie z oryginalną pracą na ten temat, ławę uruchamiałem tylko dla $level=1$, dla innych poziomów działał standardowy NRPA. Próbowałem różnych
-rozmiarów ław, w zależności od $n$ oraz $N$. Najlepsze efekty uzyskiwałem dla dużych $N$ i małych ław, czyli tak na prawdę nie ignorując odnóg bliskich najlepszym rozwiązaniom NRPA.
+Jako udoskonalenie NRPA zaimplementowałem wersję z ławą. Zgodnie z oryginalną pracą na ten temat, ławę uruchamiałem tylko dla $level=1$,
+dla innych poziomów działał standardowy NRPA. Próbowałem różnych rozmiarów ław, w zależności od $n$ oraz $N$. Najlepsze efekty uzyskiwałem
+dla dużych $N$ i małych ław, czyli tak na prawdę nie ignorując odnóg bliskich najlepszym rozwiązaniom NRPA. Osiągane wyniki dla danych $n$ w
+zależności od $level$ i rozmiaru ławy $B$. W tabelce nie uwzględniam levelu 0, ponieważ jest on równoważny wywołaniu NRPA z takim samym levelem.
+
+$n = 200$
+
+\begin{adjustbox}{center}
+\begin{tabularx}{0.7\linewidth}{|X|X|X|X| }
+  \hline
+  & \multicolumn{3}{|X|}{$level$} \\
+  \hline
+  $B$ & $1$ & $2$ \\
+  \hline
+  $2$ & $100-140$ & $164-169$ \\
+  \hline
+  $4$ & $100-145$ & $166-169$ \\
+  \hline
+  $8$ & asd & asd & asd \\
+  \hline
+\end{tabularx}
+\end{adjustbox}
 
 \end{document}
