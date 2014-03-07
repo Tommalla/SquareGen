@@ -20,13 +20,13 @@
 
 \section{Wstęp}
 Ten dokument przedstawia analizę jakości i porównanie 3 algorytmów, przy tworzeniu słów zadanej długości ($n$; $200$ oraz $500$) 
-nad alfabetem binarnym (${0, 1}$), zawierających największą możliwą liczbę kwadratów. Algorytmy zastosowane w próbach, to: NMCS
+nad alfabetem binarnym ($\{0, 1\}$), zawierających największą możliwą liczbę kwadratów. Algorytmy zastosowane w próbach, to: NMCS
 - Nested Monte-Carlo Search[1], NRPA - Nested Rollout Policy Adaptation[2], BeamNRPA - Beam Nested Rollout Policy Adaptation[3].
 W tej pracy opiszę po kolei eksperymenty przeprowadzane na każdym z tych algorytmów, zachowując kolejnośc w jakiej je implementowałem,
 włącznie z kolejnością wzbogacania standardowych pomysłów o swoje własne.
 
 \section{NMCS}
-Algorytm w standardowej implementacji dawał się bez większych problemów wykonywać dla $level \in {0, 1}$. Dla wyższych wartości, robił
+Algorytm w standardowej implementacji dawał się bez większych problemów wykonywać dla $level \in \{0, 1\}$. Dla wyższych wartości, robił
 się wystarczająco wolny, aby kończyła mi się cierpliwość. Tutaj też pojawił się pierwszy pomysł optymalizacyjny - zapamiętywanie najlepszego
 wyniku między wykonywaniem algorytmu. W efekcie, lepiej eksplorujemy lokalne maksima, ale istnieje ryzyko ugrzęźnięcia w takim maksimum. 
 W tamtym momencie problem ten pominąłem uruchamiając po prostu program ponownie, jeśli zbyt długo zwracał ten sam wynik. Przy kolejnych
@@ -42,7 +42,7 @@ Poniżej prezentuję tabelę typowych wyników otrzymywanych NMCSem dla danych $
   \hline
   $200$ & $50 - 85$ & $80 - 155$ & $140-$brak cierpliwości \\
   \hline
-  $500$ & $70 - 120$ & $159 - 260$ & TODO \\
+  $500$ & $70 - 120$ & $159 - 260$ & brak cierpliwości \\
   \hline
 \end{tabularx}
 \end{adjustbox}
@@ -89,9 +89,9 @@ zależności od $level$ i rozmiaru ławy $B$. W tabelce nie uwzględniam levelu 
 $n = 200$
 
 \begin{adjustbox}{center}
-\begin{tabularx}{0.7\linewidth}{|X|X|X|X| }
+\begin{tabularx}{0.7\linewidth}{|X|X|X| }
   \hline
-  & \multicolumn{3}{|X|}{$level$} \\
+  & \multicolumn{2}{|X|}{$level$} \\
   \hline
   $B$ & $1$ & $2$ \\
   \hline
@@ -99,9 +99,49 @@ $n = 200$
   \hline
   $4$ & $100-145$ & $166-169$ \\
   \hline
-  $8$ & asd & asd & asd \\
+  $8$ & $100-155$ & $167-169$ \\
   \hline
 \end{tabularx}
 \end{adjustbox}
+
+\pagebreak
+$n = 500$
+
+\begin{adjustbox}{center}
+\begin{tabularx}{0.7\linewidth}{|X|X|X| }
+  \hline
+  & \multicolumn{2}{|X|}{$level$} \\
+  \hline
+  $B$ & $1$ & $2$ \\
+  \hline
+  $2$ & $250-284$ & $346 - 423$\\
+  \hline
+  $4$ & $250-281$ & $321 - 364$  \\
+  \hline
+  $8$ & $250-268$ & $358$ - brak cierpliwości \\
+  \hline
+\end{tabularx}
+\end{adjustbox}
+
+\section{Wnioski, komentarze}
+Spostrzeżenie, które nasuwa się szybko po przejrzeniu wyników jest takie, że kolejne metody, wraz z rosnącym stopniem skomplikowania, dosyć
+stabilnie produkują lepsze minimalne wyniki. Naturalnie też łatwiej osiągają maksymalne wyniki, których nie udawało się osiągać słabszym wersjom.
+
+Widać, że jest sporo miejsc, w których jeszcze możnaby pobawić się parametrami. Ze względu na wnioski w [2], nie ruszałem w ogóle parametru 
+$\alpha$, domyślnie ustalonego na $1.0$. Możliwe że jakieś zmiany tam zaskutkowałyby lepszymi wynikami. Prawdopodobnie możnaby też wydajnościowo
+poprawić implementacje (i np. zrównoleglić niektóre fazy) - możnaby wtedy uruchomić przeszukiwanie z większą głębokością, które prawdopodobnie
+znalazłoby jakieś lepsze rozwiązania.
+
+Zastanawiające są wyniki dla NRPA przy $level=1$ (osiąganie $100$ lub $200$ cały czas). Możliwe, że w mojej implementacji kryje się gdzieś jakiś
+błąd, ponieważ trochę ciężko mi uwierzyć, że 2-poziomowy algorytm sprytniejszy niż NMCS nie umie wykryć lepszych rozwiązań. Niemniej nie udało mi
+się do tej pory możliwego błędu zlokalizować.
+
+\section{Odnośniki}
+[1] Nested Monte-Carlo Search.
+Tristan Cazenave. IJCAI, page 456-461. (2009) \
+[2] Nested Rollout Policy Adaptation for Monte Carlo Tree Search,
+Christopher D. Rosin. IJCAI, page 649-654. IJCAI/AAAI, (2011) \
+[3] "Beam Nested Rollout Policy Adaptation", Tristan Cazenave,
+Fabien Teytaud. Computer Games Workshop, ECAI 2012, pp. 1-12, Montpellier, August 2012
 
 \end{document}
